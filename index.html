@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VisajePro · Barbero & Consultor de Imagen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --negro: #0a0a0a;
+    --gris-oscuro: #1a1a1a;
+    --gris-medio: #2e2e2e;
+    --gris: #6b6b6b;
+    --gris-claro: #c0c0c0;
+    --amarillo: #f5c518;
+    --amarillo-suave: #ffe066;
+    --blanco: #f0f0f0;
+    --radius: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+  body {
+    background: var(--negro);
+    color: var(--blanco);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--amarillo);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    mix-blend-mode: difference;
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--amarillo);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99998;
+    opacity: 0.6;
+    transition: transform 0.35s ease;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAVBAR */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.2rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10,10,10,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(245,197,24,0.1);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem;
+    letter-spacing: 3px;
+    color: var(--blanco);
+  }
+  .nav-logo span { color: var(--amarillo); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--gris-claro);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1.5px;
+    background: var(--amarillo);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--amarillo); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--amarillo) !important;
+    color: var(--negro) !important;
+    padding: 0.5rem 1.3rem !important;
+    font-weight: 700 !important;
+    border-radius: 2px;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--amarillo-suave) !important; color: var(--negro) !important; }
+
+  /* HERO */
+  #inicio {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid-lines {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(245,197,24,0.035) 80px);
+    pointer-events: none;
+  }
+  .hero-glow {
+    position: absolute;
+    right: -80px; top: 50%;
+    transform: translateY(-50%);
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,197,24,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin-bottom: 1.8rem;
+    animation: fadeUp 0.8s ease both;
+    position: relative;
+    padding-left: 1.1rem;
+  }
+  .hero-tag::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--amarillo), transparent);
+    border-radius: 2px;
+  }
+  .hero-tag-line1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amarillo);
+  }
+  .hero-tag-line2 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--gris-claro);
+    text-transform: uppercase;
+  }
+  .hero-tag-dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--amarillo);
+    border-radius: 50%;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 8vw, 7.5rem);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+  .hero-title .accent { color: var(--amarillo); display: block; }
+  .hero-sub {
+    margin-top: 1.8rem;
+    color: var(--gris-claro);
+    font-size: 1rem;
+    line-height: 1.75;
+    max-width: 430px;
+    font-weight: 300;
+    animation: fadeUp 0.9s 0.2s ease both;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    animation: fadeUp 0.9s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--amarillo);
+    color: var(--negro);
+    padding: 0.95rem 2.2rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    cursor: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(245,197,24,0.35); }
+  .btn-outline {
+    background: transparent;
+    color: var(--blanco);
+    padding: 0.95rem 2.2rem;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.18);
+    transition: border-color 0.2s, color 0.2s;
+    cursor: none;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--amarillo); color: var(--amarillo); }
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3.5rem;
+    animation: fadeUp 0.9s 0.4s ease both;
+  }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--amarillo); line-height: 1; }
+  .stat-label { font-size: 0.7rem; color: var(--gris); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 0.3rem; }
+  .hero-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    animation: fadeUp 0.9s 0.25s ease both;
+  }
+  .hero-card {
+    width: 310px;
+    background: var(--gris-oscuro);
+    border: 1px solid rgba(245,197,24,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-card-img {
+    width: 100%;
+    height: 370px;
+    background: linear-gradient(150deg, #2a2a2a 0%, var(--negro) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    position: relative;
+  }
+  .hero-card-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(transparent, var(--gris-oscuro));
+  }
+  .hero-card-badge {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: var(--amarillo);
+    color: var(--negro);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.3rem 0.65rem;
+    border-radius: 2px;
+  }
+  .hero-card-body { padding: 1.2rem; }
+  .hero-card-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+  .hero-card-role { font-size: 0.72rem; color: var(--amarillo); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 0.3rem; }
+  .badge-float {
+    position: absolute;
+    background: var(--gris-oscuro);
+    border: 1px solid rgba(245,197,24,0.25);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  .badge-float.tl { top: 8%; left: -65px; animation: floatY 4s ease-in-out infinite; }
+  .badge-float.br { bottom: 12%; right: -55px; animation: floatY 4s 2s ease-in-out infinite; }
+  .badge-float strong { color: var(--amarillo); display: block; font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 1px; }
+  @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTION BASE */
+  section { padding: 7rem 4rem; }
+  .eyebrow { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--amarillo); margin-bottom: 0.8rem; }
+  .sec-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem,5vw,4.5rem); line-height: 1; letter-spacing: 1px; }
+  .divider { width: 48px; height: 2px; background: var(--amarillo); margin: 1.5rem 0; }
+
+  /* SERVICIOS */
+  #servicios { background: var(--gris-oscuro); }
+  .sec-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; }
+  .sec-header p { color: var(--gris-claro); font-size:0.88rem; max-width:300px; line-height:1.7; font-weight:300; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5px; background: rgba(245,197,24,0.08); }
+  .sv-card {
+    background: var(--gris-oscuro);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .sv-card:hover { background: #222; }
+  .sv-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--amarillo);
+    transition: width 0.4s;
+  }
+  .sv-card:hover::after { width: 100%; }
+  .sv-num { font-family:'Bebas Neue'; font-size:2.8rem; color:rgba(245,197,24,0.12); line-height:1; margin-bottom:0.8rem; }
+  .sv-icon { font-size:1.8rem; margin-bottom:0.8rem; display:block; }
+  .sv-name { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:0.7rem; }
+  .sv-desc { font-size:0.84rem; color:var(--gris-claro); line-height:1.7; font-weight:300; }
+  .sv-price { margin-top:1.3rem; font-family:'Bebas Neue'; font-size:1.2rem; color:var(--amarillo); letter-spacing:1px; }
+
+  /* MISIÓN VISIÓN */
+  #filosofia {
+    background: var(--negro);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .mv-card {
+    background: var(--gris-oscuro);
+    border-left: 3px solid var(--amarillo);
+    padding: 2.8rem 2.5rem;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .mv-card::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: rgba(245,197,24,0.04);
+  }
+  .mv-icon { font-size:2rem; margin-bottom:1rem; }
+  .mv-label { font-family:'Bebas Neue'; font-size:1.8rem; letter-spacing:2px; margin-bottom:0.8rem; }
+  .mv-text { color:var(--gris-claro); line-height:1.8; font-size:0.88rem; font-weight:300; }
+  .proceso-item { display:flex; gap:1.3rem; align-items:flex-start; margin-bottom:1.5rem; }
+  .pi-icon {
+    width:46px; height:46px;
+    background:rgba(245,197,24,0.08);
+    border:1px solid rgba(245,197,24,0.25);
+    border-radius:4px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.2rem; flex-shrink:0;
+  }
+  .pi-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; margin-bottom:0.3rem; }
+  .pi-desc { color:var(--gris-claro); font-size:0.83rem; line-height:1.6; font-weight:300; }
+
+  /* SATISFACCIÓN */
+  #satisfaccion { background: var(--gris-oscuro); text-align:center; }
+  .chart-wrap { max-width:780px; margin:3rem auto 0; }
+  .bars-row {
+    display:flex; justify-content:center; align-items:flex-end;
+    gap:1.5rem; height:220px; margin-bottom:0.5rem;
+  }
+  .bar-g { display:flex; flex-direction:column; align-items:center; gap:0.4rem; flex:1; }
+  .bval { font-family:'Bebas Neue'; font-size:1rem; color:var(--amarillo); }
+  .btrack {
+    width:100%; background:rgba(255,255,255,0.05);
+    border-radius:4px 4px 0 0;
+    height:160px; display:flex; align-items:flex-end; overflow:hidden;
+  }
+  .bfill {
+    width:100%;
+    background:linear-gradient(to top, var(--amarillo), var(--amarillo-suave));
+    border-radius:4px 4px 0 0;
+    height:0;
+    transition:height 1.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .blabel { font-size:0.62rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--gris); margin-top:0.4rem; text-align:center; }
+  .score-box {
+    display:inline-flex; align-items:center; gap:1.8rem;
+    background:var(--gris-medio);
+    border:1px solid rgba(245,197,24,0.2);
+    padding:1.5rem 3rem;
+    border-radius:4px; margin-top:3rem;
+  }
+  .score-big { font-family:'Bebas Neue'; font-size:4rem; color:var(--amarillo); line-height:1; }
+  .score-info { text-align:left; }
+  .score-stars { font-size:1.1rem; letter-spacing:2px; color:var(--amarillo); }
+  .score-label { font-size:0.82rem; color:var(--gris-claro); margin-top:0.2rem; }
+  .score-sub { font-size:0.7rem; color:var(--gris); margin-top:0.2rem; }
+
+  /* RESERVAS */
+  #reservas { background: var(--negro); }
+  .reservas-grid { display:grid; grid-template-columns:1fr 1.3fr; gap:4rem; align-items:start; margin-top:3rem; }
+  .rinfo h3 { font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; margin-bottom:0.8rem; }
+  .rinfo p { color:var(--gris-claro); font-size:0.88rem; line-height:1.7; font-weight:300; margin-bottom:1.8rem; }
+  .steps { display:flex; flex-direction:column; gap:0.9rem; margin-bottom:2rem; }
+  .step { display:flex; align-items:center; gap:1rem; }
+  .snum {
+    width:30px; height:30px;
+    background:var(--amarillo); color:var(--negro);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:0.72rem; font-weight:700; flex-shrink:0;
+  }
+  .stxt { font-size:0.85rem; color:var(--gris-claro); }
+  .horario-box {
+    background:var(--gris-oscuro);
+    border:1px solid rgba(245,197,24,0.18);
+    padding:1.4rem; border-radius:4px;
+  }
+  .horario-box .ey { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--amarillo); margin-bottom:0.5rem; }
+  .horario-box p { font-size:0.85rem; color:var(--gris-claro); line-height:1.8; font-weight:300; }
+  .booking-box {
+    background:var(--gris-oscuro);
+    border:1px solid rgba(245,197,24,0.14);
+    border-radius:6px; padding:2.5rem;
+  }
+  .booking-box h3 {
+    font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase; color:var(--amarillo);
+    margin-bottom:1.5rem;
+  }
+  .fg { margin-bottom:1.1rem; }
+  .fg label { display:block; font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--gris); margin-bottom:0.45rem; }
+  .fg input, .fg select, .fg textarea {
+    width:100%;
+    background:var(--gris-medio);
+    border:1px solid rgba(255,255,255,0.07);
+    color:var(--blanco);
+    padding:0.75rem 1rem;
+    font-family:'DM Sans',sans-serif; font-size:0.88rem;
+    border-radius:2px; outline:none;
+    transition:border-color 0.2s;
+    cursor:none;
+  }
+  .fg input:focus, .fg select:focus, .fg textarea:focus { border-color:var(--amarillo); }
+  .fg select option { background:var(--gris-medio); }
+  .frow { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .btn-book {
+    width:100%; background:var(--amarillo); color:var(--negro);
+    border:none; padding:1rem;
+    font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase;
+    border-radius:2px; margin-top:0.5rem;
+    cursor:none; transition:transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-book:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(245,197,24,0.3); }
+  .setmore-link {
+    display:flex; align-items:center; justify-content:center;
+    gap:0.5rem; margin-top:1.1rem;
+    font-size:0.75rem; color:var(--gris); text-decoration:none;
+    transition:color 0.2s;
+  }
+  .setmore-link:hover { color:var(--amarillo); }
+  .setmore-link span { text-decoration:underline; }
+
+  /* RESEÑAS */
+  #resenas { background: var(--gris-oscuro); }
+  .resenas-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3rem; }
+  .grid-resenas { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .rc {
+    background:var(--negro);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:4px; padding:2rem;
+    transition:border-color 0.3s, transform 0.3s;
+  }
+  .rc:hover { border-color:rgba(245,197,24,0.3); transform:translateY(-5px); }
+  .rc-q { font-size:3rem; line-height:0.5; color:var(--amarillo); font-family:'Bebas Neue'; margin-bottom:1rem; }
+  .rc-txt { font-size:0.87rem; color:var(--gris-claro); line-height:1.75; font-weight:300; font-style:italic; margin-bottom:1.2rem; }
+  .rc-stars { color:var(--amarillo); font-size:0.75rem; letter-spacing:2px; margin-bottom:1rem; }
+  .rc-autor { display:flex; align-items:center; gap:0.8rem; }
+  .rc-av {
+    width:36px; height:36px; border-radius:50%;
+    background:var(--gris-medio); display:flex;
+    align-items:center; justify-content:center;
+    font-size:0.95rem; border:1px solid rgba(245,197,24,0.18);
+  }
+  .rc-name { font-size:0.82rem; font-weight:600; font-family:'Syne',sans-serif; }
+  .rc-serv { font-size:0.68rem; color:var(--gris); letter-spacing:1px; text-transform:uppercase; }
+
+  /* FOOTER */
+  footer {
+    background:var(--negro);
+    border-top:1px solid rgba(245,197,24,0.08);
+    padding:4rem 4rem 2rem;
+  }
+  .footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:3rem; margin-bottom:3rem; }
+  .fl-logo { font-family:'Bebas Neue'; font-size:2rem; letter-spacing:3px; margin-bottom:0.8rem; }
+  .fl-logo span { color:var(--amarillo); }
+  .fl-tag { color:var(--gris); font-size:0.85rem; line-height:1.7; font-weight:300; max-width:270px; margin-bottom:1.5rem; }
+  .socials { display:flex; gap:0.7rem; }
+  .sb {
+    width:35px; height:35px; border:1px solid rgba(255,255,255,0.1);
+    border-radius:2px; display:flex; align-items:center; justify-content:center;
+    text-decoration:none; font-size:0.9rem; color:var(--gris-claro);
+    transition:border-color 0.2s, color 0.2s;
+  }
+  .sb:hover { border-color:var(--amarillo); color:var(--amarillo); }
+  .fc h4 { font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--amarillo); margin-bottom:1.2rem; }
+  .fc ul { list-style:none; }
+  .fc li { margin-bottom:0.6rem; }
+  .fc a { text-decoration:none; color:var(--gris); font-size:0.85rem; transition:color 0.2s; }
+  .fc a:hover { color:var(--amarillo); }
+  .footer-bot { border-top:1px solid rgba(255,255,255,0.05); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; }
+  .fcopy { font-size:0.75rem; color:var(--gris); }
+
+  /* WHATSAPP */
+  .wa-fab {
+    position:fixed; bottom:2rem; right:2rem; z-index:500;
+    display:flex; flex-direction:column; align-items:flex-end; gap:0.7rem;
+  }
+  .wa-tip {
+    background:var(--gris-oscuro);
+    border:1px solid rgba(245,197,24,0.3);
+    padding:0.6rem 1rem;
+    border-radius:4px; font-size:0.75rem; color:var(--blanco);
+    white-space:nowrap; opacity:0; transform:translateX(10px);
+    transition:opacity 0.3s, transform 0.3s; pointer-events:none;
+  }
+  .wa-fab:hover .wa-tip { opacity:1; transform:translateX(0); }
+  .wa-btn {
+    width:56px; height:56px; background:#25D366; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; font-size:1.5rem;
+    box-shadow:0 8px 25px rgba(37,211,102,0.38);
+    transition:transform 0.3s, box-shadow 0.3s;
+    animation:wap 3s ease-in-out infinite; cursor:none;
+  }
+  .wa-btn:hover { transform:scale(1.1); box-shadow:0 12px 35px rgba(37,211,102,0.5); animation:none; }
+  @keyframes wap { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:2rem; left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:var(--amarillo); color:var(--negro);
+    padding:0.8rem 2rem; border-radius:4px;
+    font-weight:700; font-size:0.85rem; z-index:10000;
+    transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    nav { padding:1rem 1.5rem; }
+    .nav-links { display:none; }
+    #inicio { grid-template-columns:1fr; padding:7rem 1.5rem 3rem; text-align:center; }
+    .hero-right { display:none; }
+    .hero-stats { justify-content:center; }
+    .hero-btns { justify-content:center; }
+    section { padding:5rem 1.5rem; }
+    .grid-3 { grid-template-columns:1fr; gap:2px; }
+    #filosofia { grid-template-columns:1fr; gap:2rem; padding:5rem 1.5rem; }
+    .reservas-grid { grid-template-columns:1fr; }
+    .grid-resenas { grid-template-columns:1fr; }
+    .footer-grid { grid-template-columns:1fr; }
+    .footer-bot { flex-direction:column; gap:1rem; text-align:center; }
+    .sec-header { flex-direction:column; gap:1rem; align-items:flex-start; }
+    .resenas-header { flex-direction:column; gap:1rem; align-items:flex-start; }
+    .frow { grid-template-columns:1fr; }
+    body { cursor:auto; }
+    .cursor,.cursor-ring { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cring"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">Visaje<span>Pro</span></div>
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#filosofia">Nosotros</a></li>
+    <li><a href="#satisfaccion">Resultados</a></li>
+    <li><a href="#resenas">Reseñas</a></li>
+    <li><a href="#reservas" class="nav-cta">Reservar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-grid-lines"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-left">
+    <div class="hero-tag">
+      <div class="hero-tag-line1"><span class="hero-tag-dot"></span>Barbero Visajista</div>
+      <div class="hero-tag-line2">Consultor de Imagen &amp; Estilo</div>
+    </div>
+    <h1 class="hero-title">
+      Tu mejor
+      <span class="accent">versión</span>
+      empieza aquí
+    </h1>
+    <div class="hero-btns" style="margin-top:2.5rem">
+      <a href="#reservas" class="btn-primary">Reservar Cita</a>
+      <a href="#servicios" class="btn-outline">Ver Servicios</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">+500</div><div class="stat-label">Clientes</div></div>
+      <div><div class="stat-num">98%</div><div class="stat-label">Satisfacción</div></div>
+      <div><div class="stat-num">5+</div><div class="stat-label">Años exp.</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="badge-float tl"><strong>✓</strong>Consulta Gratuita</div>
+    <div class="hero-card">
+      <div class="hero-card-img">
+        ✂️
+        <div class="hero-card-badge">Disponible</div>
+      </div>
+      <div class="hero-card-body">
+        <div class="hero-card-name">Tu Barbero Visajista</div>
+        <div class="hero-card-role">Consultor de Imagen Profesional</div>
+      </div>
+    </div>
+    <div class="badge-float br"><strong>★ 4.9</strong>+180 reseñas</div>
+  </div>
+</section>
+
+<!-- QUIÉN SOY -->
+<section id="servicios" style="background:var(--gris-oscuro)">
+  <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:center">
+    <div>
+      <div class="eyebrow">Quién soy</div>
+      <h2 class="sec-title" style="margin-bottom:1.5rem">Imagen que<br><span style="color:var(--amarillo)">transforma</span></h2>
+      <div class="divider"></div>
+      <p style="color:var(--gris-claro);font-size:0.95rem;line-height:1.85;font-weight:300;margin-bottom:2rem">
+        Soy consultor de imagen y estilo, especializado en ayudar a las personas a descubrir y proyectar su mejor versión. A través del análisis de sus rasgos, personalidad y estilo de vida, les guío para elegir el corte de cabello y la imagen que realmente los representa.
+      </p>
+      <a href="#reservas" class="btn-primary" style="display:inline-block">Ver Servicios →</a>
+    </div>
+    <div style="position:relative">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div style="background:var(--gris-medio);border:1px solid rgba(245,197,24,0.12);border-radius:6px;padding:1.8rem 1.5rem;display:flex;flex-direction:column;gap:0.6rem">
+          <span style="font-size:1.6rem">🔍</span>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem">Análisis Facial</div>
+          <div style="font-size:0.78rem;color:var(--gris-claro);font-weight:300;line-height:1.5">Morfología y rasgos únicos</div>
+        </div>
+        <div style="background:var(--amarillo);border-radius:6px;padding:1.8rem 1.5rem;display:flex;flex-direction:column;gap:0.6rem;margin-top:1.5rem">
+          <span style="font-size:1.6rem">✂️</span>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--negro)">Corte a Medida</div>
+          <div style="font-size:0.78rem;color:rgba(10,10,10,0.7);font-weight:400;line-height:1.5">Tu estilo, tu identidad</div>
+        </div>
+        <div style="background:var(--gris-medio);border:1px solid rgba(245,197,24,0.12);border-radius:6px;padding:1.8rem 1.5rem;display:flex;flex-direction:column;gap:0.6rem;margin-top:-0.8rem">
+          <span style="font-size:1.6rem">👔</span>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem">Imagen Personal</div>
+          <div style="font-size:0.78rem;color:var(--gris-claro);font-weight:300;line-height:1.5">Proyecta quién eres</div>
+        </div>
+        <div style="background:var(--gris-medio);border:1px solid rgba(245,197,24,0.12);border-radius:6px;padding:1.8rem 1.5rem;display:flex;flex-direction:column;gap:0.6rem">
+          <span style="font-size:1.6rem">🖥️</span>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem">Consulta Online</div>
+          <div style="font-size:0.78rem;color:var(--gris-claro);font-weight:300;line-height:1.5">Desde donde estés</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISIÓN Y VISIÓN -->
+<section id="filosofia">
+  <div>
+    <div class="eyebrow">Quiénes somos</div>
+    <h2 class="sec-title" style="margin-bottom:2rem">Filosofía</h2>
+    <div class="mv-card">
+      <div class="mv-icon">🎯</div>
+      <div class="mv-label">Misión</div>
+      <p class="mv-text">Transformar la experiencia de cada cliente mediante barbería especializada en visajismo, brindando cortes y asesoría de imagen que potencien la identidad única de cada persona. Combinamos técnica, arte y conocimiento facial para que cada visita sea una inversión en tu confianza y proyección personal.</p>
+    </div>
+    <div class="mv-card" style="margin-bottom:0">
+      <div class="mv-icon">🔭</div>
+      <div class="mv-label">Visión</div>
+      <p class="mv-text">Ser referente en barbería y consultoría de imagen, reconocidos por elevar el estándar del cuidado masculino. Aspiramos a construir una comunidad donde los hombres entiendan que cuidar su imagen es cuidar su bienestar y su futuro profesional.</p>
+    </div>
+  </div>
+  <div>
+    <div class="eyebrow">Cómo trabajamos</div>
+    <h2 class="sec-title" style="margin-bottom:2rem">El Proceso</h2>
+    <div class="proceso-item">
+      <div class="pi-icon">🔍</div>
+      <div><div class="pi-name">Análisis Facial</div><div class="pi-desc">Estudio de tu morfología: forma del rostro, proporciones, simetría y rasgos particulares.</div></div>
+    </div>
+    <div class="proceso-item">
+      <div class="pi-icon">💬</div>
+      <div><div class="pi-name">Consulta Personalizada</div><div class="pi-desc">Conversamos sobre tu estilo de vida, preferencias y objetivos de imagen para diseñar la propuesta ideal.</div></div>
+    </div>
+    <div class="proceso-item">
+      <div class="pi-icon">✂️</div>
+      <div><div class="pi-name">Ejecución con Precisión</div><div class="pi-desc">Aplicamos cada técnica con precisión artesanal, adaptándonos a ti en tiempo real.</div></div>
+    </div>
+    <div class="proceso-item">
+      <div class="pi-icon">⭐</div>
+      <div><div class="pi-name">Seguimiento Post-Servicio</div><div class="pi-desc">Recomendaciones de mantenimiento y disponibilidad para resolver tus dudas.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SATISFACCIÓN -->
+<section id="satisfaccion">
+  <div class="eyebrow" style="text-align:center">Datos reales</div>
+  <h2 class="sec-title" style="text-align:center">Índice de Satisfacción</h2>
+  <p style="color:var(--gris-claro);text-align:center;margin-top:0.8rem;font-size:0.87rem;font-weight:300">Satisfacción general de nuestros clientes</p>
+  <div class="chart-wrap">
+    <div style="display:flex;align-items:center;justify-content:center;gap:5rem;flex-wrap:wrap;margin-top:3rem">
+      <!-- PIE CHART SVG animado -->
+      <div style="position:relative;width:220px;height:220px;flex-shrink:0">
+        <svg viewBox="0 0 220 220" width="220" height="220" style="transform:rotate(-90deg)">
+          <!-- Track -->
+          <circle cx="110" cy="110" r="85" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="28"/>
+          <!-- Satisfecho 98% -->
+          <circle cx="110" cy="110" r="85" fill="none" stroke="url(#grad1)" stroke-width="28"
+            stroke-dasharray="0 550" stroke-dashoffset="0"
+            stroke-linecap="round"
+            id="pie-satisfecho" style="transition:stroke-dasharray 1.8s cubic-bezier(0.34,1.2,0.64,1)"/>
+          <!-- No satisfecho 2% -->
+          <circle cx="110" cy="110" r="85" fill="none" stroke="rgba(107,107,107,0.35)" stroke-width="28"
+            stroke-dasharray="11 550" stroke-dashoffset="-534"
+            stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f5c518"/>
+              <stop offset="100%" stop-color="#ffe066"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <!-- Texto central -->
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:var(--amarillo);line-height:1" id="pie-num">0%</div>
+          <div style="font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-top:0.2rem">Satisfacción</div>
+        </div>
+      </div>
+      <!-- Leyenda y stats -->
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div style="display:flex;align-items:center;gap:1rem">
+          <div style="width:14px;height:14px;border-radius:50%;background:var(--amarillo);flex-shrink:0"></div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem">Clientes Satisfechos</div>
+            <div style="font-size:0.78rem;color:var(--gris);margin-top:0.2rem">+490 de 500 clientes</div>
+          </div>
+          <div style="font-family:'Bebas Neue';font-size:1.8rem;color:var(--amarillo);margin-left:auto">98%</div>
+        </div>
+        <div style="width:100%;height:1px;background:rgba(255,255,255,0.06)"></div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <div style="width:14px;height:14px;border-radius:50%;background:rgba(107,107,107,0.5);flex-shrink:0"></div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem">Margen de Mejora</div>
+            <div style="font-size:0.78rem;color:var(--gris);margin-top:0.2rem">Seguimiento activo</div>
+          </div>
+          <div style="font-family:'Bebas Neue';font-size:1.8rem;color:var(--gris);margin-left:auto">2%</div>
+        </div>
+        <div style="width:100%;height:1px;background:rgba(255,255,255,0.06)"></div>
+        <div style="display:flex;gap:2.5rem;margin-top:0.5rem">
+          <div><div class="stat-num">+500</div><div class="stat-label">Clientes</div></div>
+          <div><div class="stat-num">★ 4.9</div><div class="stat-label">Promedio</div></div>
+          <div><div class="stat-num">5+</div><div class="stat-label">Años</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVAS -->
+<section id="reservas">
+  <div class="eyebrow">Agenda tu turno</div>
+  <h2 class="sec-title">Reserva tu Cita</h2>
+  <div class="divider"></div>
+  <div class="reservas-grid">
+    <div class="rinfo">
+      <h3>Proceso simple, resultado extraordinario</h3>
+      <p>Reserva en minutos y llega listo para tu transformación. También puedes agendar directamente con Setmore.</p>
+      <div class="steps">
+        <div class="step"><div class="snum">1</div><div class="stxt">Elige tu servicio y fecha disponible</div></div>
+        <div class="step"><div class="snum">2</div><div class="stxt">Completa tus datos de contacto</div></div>
+        <div class="step"><div class="snum">3</div><div class="stxt">Recibes confirmación por mensaje de texto o vía e-mail</div></div>
+        <div class="step"><div class="snum">4</div><div class="stxt">¡Aparece y vívelo!</div></div>
+      </div>
+      <div class="horario-box">
+        <div class="ey">Horarios de atención</div>
+        <p>Lunes – Viernes: 9:00 – 19:00<br>Sábado: 9:00 – 17:00<br>Domingo: Con cita previa</p>
+      </div>
+    </div>
+    <div class="booking-box">
+      <h3>Formulario de Reserva</h3>
+      <div class="frow">
+        <div class="fg"><label>Nombre</label><input type="text" id="fn" placeholder="Tu nombre"></div>
+        <div class="fg"><label>Apellido</label><input type="text" id="fa" placeholder="Tu apellido"></div>
+      </div>
+      <div class="fg"><label>Teléfono / WhatsApp</label><input type="tel" id="ft" placeholder="+56 9 xxxx xxxx"></div>
+      <div class="fg">
+        <label>Servicio</label>
+        <select id="fs">
+          <option value="">— Selecciona un servicio —</option>
+          <option>Corte Visajista</option>
+          <option>Diseño de Barba</option>
+          <option>Pack Completo</option>
+          <option>Consulta Online de Visajismo</option>
+          <option>Consultoría de Imagen</option>
+          <option>Tratamiento Capilar</option>
+        </select>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Fecha</label><input type="date" id="ff"></div>
+        <div class="fg">
+          <label>Hora preferida</label>
+          <select id="fh">
+            <option>09:00</option><option>10:00</option><option>11:00</option>
+            <option>12:00</option><option>14:00</option><option>15:00</option>
+            <option>16:00</option><option>17:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Notas (opcional)</label><textarea id="fn2" rows="2" placeholder="¿Algo que quieras comentar?" style="resize:none"></textarea></div>
+      <button class="btn-book" onclick="doReserva()">Confirmar Reserva →</button>
+      <a href="https://setmore.com" target="_blank" class="setmore-link">📅 O reserva directo con <span>Setmore</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- RESEÑAS -->
+<section id="resenas">
+  <div class="resenas-header">
+    <div>
+      <div class="eyebrow">Lo que dicen</div>
+      <h2 class="sec-title">Reseñas</h2>
+      <div class="divider"></div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:'Bebas Neue';font-size:3rem;color:var(--amarillo);line-height:1">★ 4.9</div>
+      <div style="font-size:0.72rem;color:var(--gris);letter-spacing:1px;text-transform:uppercase">+180 reseñas</div>
+    </div>
+  </div>
+  <div class="grid-resenas">
+    <div class="rc">
+      <div class="rc-q">"</div>
+      <p class="rc-txt">Nunca pensé que un corte pudiera cambiar tanto mi cara. El análisis fue increíble, me explicaron todo y el resultado fue exactamente lo que necesitaba.</p>
+      <div class="rc-stars">★★★★★</div>
+      <div class="rc-autor"><div class="rc-av">👤</div><div><div class="rc-name">Carlos M.</div><div class="rc-serv">Corte Visajista</div></div></div>
+    </div>
+    <div class="rc">
+      <div class="rc-q">"</div>
+      <p class="rc-txt">La consulta online me ayudó a entender qué estilos me favorecen antes de llegar. Llegué con claridad total y el resultado fue espectacular.</p>
+      <div class="rc-stars">★★★★★</div>
+      <div class="rc-autor"><div class="rc-av">👤</div><div><div class="rc-name">Diego R.</div><div class="rc-serv">Consulta Online</div></div></div>
+    </div>
+    <div class="rc">
+      <div class="rc-q">"</div>
+      <p class="rc-txt">La consultoría de imagen cambió cómo me veo y cómo me ven. Aprendí a proyectar confianza. Una inversión que se nota en el trabajo y en la vida social.</p>
+      <div class="rc-stars">★★★★★</div>
+      <div class="rc-autor"><div class="rc-av">👤</div><div><div class="rc-name">Sebastián V.</div><div class="rc-serv">Consultoría de Imagen</div></div></div>
+    </div>
+    <div class="rc">
+      <div class="rc-q">"</div>
+      <p class="rc-txt">El pack completo es una experiencia. Barba diseñada a medida, corte perfecto y un trato profesional que no encuentras en otro lado. Ya soy cliente fijo.</p>
+      <div class="rc-stars">★★★★★</div>
+      <div class="rc-autor"><div class="rc-av">👤</div><div><div class="rc-name">Andrés P.</div><div class="rc-serv">Pack Completo</div></div></div>
+    </div>
+    <div class="rc">
+      <div class="rc-q">"</div>
+      <p class="rc-txt">Me fui sintiéndome otra persona. Profesionalismo total, ambiente relajado y un conocimiento del visajismo que pocas barberías tienen. 100% recomendado.</p>
+      <div class="rc-stars">★★★★☆</div>
+      <div class="rc-autor"><div class="rc-av">👤</div><div><div class="rc-name">Felipe A.</div><div class="rc-serv">Diseño de Barba</div></div></div>
+    </div>
+    <div class="rc">
+      <div class="rc-q">"</div>
+      <p class="rc-txt">El tratamiento capilar fue espectacular. Mi cabello estaba muy dañado y quedó hidratado y con vida. El diagnóstico previo fue muy detallado.</p>
+      <div class="rc-stars">★★★★★</div>
+      <div class="rc-autor"><div class="rc-av">👤</div><div><div class="rc-name">Tomás G.</div><div class="rc-serv">Tratamiento Capilar</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="fl-logo">Visaje<span>Pro</span></div>
+      <p class="fl-tag">Barbería especializada en visajismo y consultoría de imagen profesional. Tu mejor versión, con técnica y arte.</p>
+      <div class="socials">
+        <a href="#" class="sb">📷</a>
+        <a href="#" class="sb">📘</a>
+        <a href="#" class="sb">🎵</a>
+        <a href="#" class="sb">▶️</a>
+      </div>
+    </div>
+    <div class="fc">
+      <h4>Servicios</h4>
+      <ul>
+        <li><a href="#servicios">Corte Visajista</a></li>
+        <li><a href="#servicios">Diseño de Barba</a></li>
+        <li><a href="#servicios">Pack Completo</a></li>
+        <li><a href="#servicios">Consulta Online</a></li>
+        <li><a href="#servicios">Consultoría de Imagen</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="#reservas">Reservar Cita</a></li>
+        <li><a href="#satisfaccion">Resultados</a></li>
+        <li><a href="#resenas">Reseñas</a></li>
+        <li><a href="#filosofia">Misión & Visión</a></li>
+        <li><a href="https://setmore.com" target="_blank">Setmore</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <div class="fcopy">© 2025 VisajePro · Todos los derechos reservados</div>
+    <div style="font-size:0.75rem;color:var(--gris)">Diseñado con ✂️ y ❤️</div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FAB -->
+<div class="wa-fab">
+  <div class="wa-tip">💬 Solicitar Consulta de Visajismo Online</div>
+  <a href="https://wa.me/56912345678?text=Hola!%20Me%20interesa%20una%20consulta%20de%20visajismo%20online%20para%20evaluar%20mi%20tipo%20de%20rostro%20y%20el%20mejor%20cambio%20de%20imagen.%20%C2%BFTienes%20disponibilidad%3F"
+     target="_blank" class="wa-btn" title="Consulta por WhatsApp">💬</a>
+</div>
+
+<div class="toast" id="toast">✓ ¡Reserva enviada! Te contactaremos pronto.</div>
+
+<script>
+// CURSOR
+const cur = document.getElementById('cursor');
+const cring = document.getElementById('cring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.transform=`translate(${mx-6}px,${my-6}px)`;
+});
+(function tick(){
+  rx+=(mx-rx-18)*0.12; ry+=(my-ry-18)*0.12;
+  cring.style.transform=`translate(${rx}px,${ry}px)`;
+  requestAnimationFrame(tick);
+})();
+
+// PIE CHART ANIMADO
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      // Animar el arco SVG
+      const pie = document.getElementById('pie-satisfecho');
+      if(pie){ pie.setAttribute('stroke-dasharray','534 550'); }
+      // Contar de 0 a 98
+      const numEl = document.getElementById('pie-num');
+      if(numEl){
+        let count=0;
+        const interval = setInterval(()=>{
+          count += 2;
+          if(count>=98){ count=98; clearInterval(interval); }
+          numEl.textContent = count+'%';
+        },30);
+      }
+      io.disconnect();
+    }
+  });
+},{threshold:0.3});
+const satSec = document.getElementById('satisfaccion');
+if(satSec) io.observe(satSec);
+
+// FADE IN SCROLL
+const fo = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }});
+},{threshold:0.1});
+document.querySelectorAll('.sv-card,.rc,.mv-card').forEach(el=>{
+  el.style.opacity='0'; el.style.transform='translateY(20px)';
+  el.style.transition='opacity 0.5s ease,transform 0.5s ease';
+  fo.observe(el);
+});
+
+// RESERVA
+function doReserva(){
+  const n=document.getElementById('fn').value;
+  const t=document.getElementById('ft').value;
+  const s=document.getElementById('fs').value;
+  const f=document.getElementById('ff').value;
+  if(!n||!t||!s||!f){ alert('Por favor completa: nombre, teléfono, servicio y fecha.'); return; }
+  const h=document.getElementById('fh').value;
+  const nota=document.getElementById('fn2').value;
+  const msg=encodeURIComponent(`Hola! Quiero reservar una cita:\nNombre: ${n}\nServicio: ${s}\nFecha: ${f} a las ${h}\nTeléfono: ${t}`+(nota?`\nNotas: ${nota}`:''));
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),4000);
+  // Reemplaza el número con el tuyo real
+  setTimeout(()=>window.open(`https://wa.me/56912345678?text=${msg}`,'_blank'),800);
+}
+
+// NAV ACTIVE SCROLL
+window.addEventListener('scroll',()=>{
+  document.querySelectorAll('section[id]').forEach(s=>{
+    if(window.scrollY>=s.offsetTop-120){
+      document.querySelectorAll('.nav-links a').forEach(a=>{
+        a.style.color = a.getAttribute('href')==='#'+s.id ? 'var(--amarillo)' : '';
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>
